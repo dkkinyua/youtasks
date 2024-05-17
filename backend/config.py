@@ -4,6 +4,8 @@ import os
 
 load_dotenv()
 
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+
 # This configuration class acts as a parent class to the other configuration classes as the other classes will inherit these properties from Config
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY")
@@ -11,7 +13,7 @@ class Config:
 
 # This configuration class is for development only and not production which we will use when developing the API, inherits from Config.
 class DevelopmentConfig(Config):
-    SQLALCHEMY_DATABASE_URI = "sqlite:///dev.db"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///"+os.path.join(BASE_DIR, "dev.db")
     DEBUG = True
     SQLALCHEMY_ECHO = False
 
