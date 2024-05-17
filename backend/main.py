@@ -4,11 +4,13 @@ from flask_restx import Api, Resource
 from config import DevelopmentConfig
 from exts import db
 from models import User, Tasks
-
+from flask_migrate import Migrate
 
 app = Flask(__name__) 
 app.config.from_object(DevelopmentConfig)
 db.init_app(app)
+
+migrate = Migrate(app, db)
 
 
 api = Api(app, doc='/docs')
