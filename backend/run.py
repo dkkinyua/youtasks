@@ -7,5 +7,6 @@ if __name__ == "__main__":
         app.run(debug=True)
 
     except:
-        print (Exception)
+        exc = str(Exception)
+        print(exc)
         
