@@ -5,6 +5,7 @@ from exts import db
 from models import User, Tasks
 from flask_migrate import Migrate
 from tasks import tasks_namespace
+from auth import auth_ns
 
 # This create_app function is exported to run.py to run our Flask application, for better organization of our modules.
 
@@ -18,6 +19,7 @@ def create_app(config):
     api = Api(app, doc='/docs')
 
     api.add_namespace(tasks_namespace)
+    api.add_namespace(auth_ns)
         
 
     @app.shell_context_processor
