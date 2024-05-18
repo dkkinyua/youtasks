@@ -7,7 +7,7 @@ class User(db.Model):
     username = db.Column(db.String(20), nullable=False, unique=True)
     email = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(), nullable=False)
-    tasks = db.relalationship("Tasks", backref='author', lazy=True)
+    tasks = db.relationship("Tasks", backref='author', lazy=True)
 
     def __repr__(self):
         return f'<User {self.username}>'

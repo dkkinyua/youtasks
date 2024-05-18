@@ -1,11 +1,17 @@
 # This Python file will hold our application's settings.
 from flask import Flask
 from flask_restx import Api, Resource
+from config import DevelopmentConfig
 from exts import db
-
+from models import User, Tasks
+from flask_migrate import Migrate
 
 app = Flask(__name__) 
+app.config.from_object(DevelopmentConfig)
 db.init_app(app)
+
+migrate = Migrate(app, db)
+
 
 api = Api(app, doc='/docs')
 
@@ -19,5 +25,15 @@ class Hello(Resource):
 
         return message, 200
     
+
+@app.shell_context_processor
+def make_shell_context():
+    return {
+        "db": db,
+        "User": User,
+        "Tasks": Tasks
+    }
+
+
 if __name__ == "__main__":
     app.run(debug=True)
