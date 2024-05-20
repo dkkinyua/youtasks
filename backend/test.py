@@ -56,6 +56,34 @@ class APITestCase(ut.TestCase):
         status_code = login_response.status_code
 
         self.assertEqual(status_code, 200)
+
+    # Tests for refresh tokens
+    def test_refresh(self):
+        test = {
+            "username": "test",
+            "email": "test@test.com",
+            "password": "password"
+        }
+
+        signup_response = self.client.post("/auth/signup", json=test)
+
+        login = {
+            "username": "test",
+            "password": "password"
+        }
+
+        login_response = self.client.post("/auth/login", json=login)
+        refresh_token = login_response.json['refresh_token']
+
+        headers = {
+            "Authorization": f"Bearer {refresh_token}"
+        }
+
+        refresh_response = self.client.post("/auth/refresh", headers=headers)
+
+        status_code = refresh_response.status_code
+
+        self.assertEqual(status_code, 200)
         
 
     # This function tears down the test database after running tests
