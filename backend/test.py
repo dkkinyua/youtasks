@@ -22,6 +22,21 @@ class APITestCase(ut.TestCase):
 
         self.assertEqual(status_code, 200)
 
+    # Test for signup
+
+    def test_signup(self):
+        test = {
+            "username": "test",
+            "email": "test@test.com",
+            "password": "password"
+        }
+
+        signup_response = self.client.post("/auth/signup", json=test)
+
+        status_code = signup_response.status_code
+
+        self.assertEqual(status_code, 201)
+
     # This function tears down the test database after running tests
     def tearDown(self):
         with self.app.app_context():
