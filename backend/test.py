@@ -1,6 +1,6 @@
 # This file is for writing and running unit tests on our application's endpoint.
 
-import unittest as ut
+import unittest as ut # Importing it as 'ut' to avoid writing unittest everytime we use the module
 from main import create_app
 from models import User
 from exts import db
