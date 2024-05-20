@@ -1,9 +1,10 @@
 # This Python file will hold our application's settings.
 from flask import Flask
 from flask_restx import Api
+from flask_migrate import Migrate
+from flask_jwt_extended import JWTManager
 from exts import db
 from models import User, Tasks
-from flask_migrate import Migrate
 from tasks import tasks_namespace
 from auth import auth_ns
 
@@ -15,6 +16,7 @@ def create_app(config):
     db.init_app(app)
 
     migrate = Migrate(app, db)
+    JWTManager(app)
 
     api = Api(app, doc='/docs')
 
