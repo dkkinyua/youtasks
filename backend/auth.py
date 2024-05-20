@@ -92,3 +92,18 @@ class Login(Resource):
             return jsonify({
                 "msg": "Wrong Password, try again."
             })
+        
+# This endpoint refreshes the tokens everytime a user reloads the page
+@auth_ns.route("/refresh", methods=["POST"])
+class Refresh(Resource):
+    @jwt_required(refresh=True)
+    def post(self):
+        current_user = get_jwt_identity()
+
+        access_token = create_access_token(identity=current_user)
+
+        return make_response(jsonify(
+            {
+                "access_token": access_token
+            }
+        ), 200)
