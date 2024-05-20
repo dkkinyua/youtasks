@@ -15,6 +15,13 @@ class APITestCase(ut.TestCase):
         with self.app.app_context():
             db.create_all()
 
+    def test_hello(self):
+        test_response = self.client.get("/tasks/hello")
+
+        status_code = test_response.status_code
+
+        self.assertEqual(status_code, 200)
+
     # This function tears down the test database after running tests
     def tearDown(self):
         with self.app.app_context():
