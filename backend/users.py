@@ -52,6 +52,26 @@ class Users(Resource):
         )
 
         return details, 200
+    
+    # Function to delete the user from the db
+    @jwt_required()
+    @user_ns.marshal_with(user_model)
+    def delete(self, user_id):
+        current_user = get_jwt_identity()
+        
+        details = User.query.filter_by(username=current_user).first()
+
+        if details.id != user_id:
+            return jsonify({
+                "msg": "Unauthorized entry."
+            }), 403
+
+        details.delete()
+
+        return jsonify({
+            "msg": "User deleted"
+        }), 200
+
 
 
 
