@@ -15,20 +15,46 @@ user_model = user_ns.model(
     }
 )
 
-@user_ns.route("/<int:id>")
+@user_ns.route("/<int:user_id>")
 class Users(Resource):
+    # Gets all the details of a user, protected route
     @jwt_required()
     @user_ns.marshal_with(user_model)
-    def get(self, id):
+    def get(self, user_id):
         current_user = get_jwt_identity()
 
         details = User.query.filter_by(username=current_user).first()
 
-        if details.id != id:
-            return make_response(jsonify({
+        if details.id != user_id:
+            return jsonify({
                 "msg": "Hey, you are not supposed to do that! Check your permissions."
-            }) ,403)
+            }) ,403
         
         return details, 200
+    
+    @jwt_required()
+    @user_ns.expect(user_model)
+    @user_ns.marshal_with(user_model)
+    def put(self, user_id):
+        current_user = get_jwt_identity()
+        data = request.get_json()
+
+        details = User.query.filter_by(username=current_user).first()
+
+        if details.id != user_id:
+            return jsonify({
+                "msg": "Unauthorized entry."
+            }), 403
+        
+        details.update(
+            username = data.get("username"),
+            email = data.get("email")
+        )
+
+        return details, 200
+
+
+
+
     
 
