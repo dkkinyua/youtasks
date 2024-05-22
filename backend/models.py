@@ -49,15 +49,15 @@ class Tasks(db.Model):
         db.session.add(self)
         db.session.commit()
     
-    def update(self, task, due_time):
+    def update(self, task, due_time, task_done):
         self.task = task
         self.due_time = due_time
+        self.task_done = task_done
 
         db.session.commit()
 
     def delete(self, task_done):
         self.task_done = task_done
-        task_done = True
         db.session.delete(self)
         db.session.commit()
 
