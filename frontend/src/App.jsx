@@ -1,4 +1,4 @@
-import Cards from './components/Cards'
+import Tasks from './components/Tasks'
 import './App.css'
 import Navbar from './components/Navbar'
 function App() {
@@ -7,7 +7,7 @@ function App() {
     <>
     <div className="main bg-black h-screen">
       <Navbar/>
-      <Cards/>
+      <Tasks/>
     </div>
      
     </>
