@@ -34,7 +34,7 @@ const Navbar = () => {
           <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" />
         </svg>
         {toggleDropdown && (
-          <div className="absolute bg-white rounded-md mt-2 right-6">
+          <div className="absolute bg-white rounded-md mt-2 right-6 z-10">
             <div className="w-24 border-red-700 border hover:bg-red-700 hover:text-white rounded text-center text-black m-2 cursor-pointer">
               Create Task
             </div>

@@ -48,7 +48,7 @@ const Cards = () => {
 					name="done"
 					// eslint-disable-next-line
 					id={`done-${task.id}`}
-					className="w-4 h-4 self-center relative"
+					className="w-4 h-4 self-center relative z-0"
 					// eslint-disable-next-line
 					checked={task.done}
 					// eslint-disable-next-line

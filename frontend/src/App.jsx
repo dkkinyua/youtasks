@@ -8,6 +8,7 @@ function App() {
     <div className="main bg-black h-screen">
       <Navbar/>
       <Tasks/>
+      
     </div>
      
     </>
