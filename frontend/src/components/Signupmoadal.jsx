@@ -2,6 +2,7 @@ import Modal from "./Modal";
 
 // eslint-disable-next-line
 export const Signupmoadal = ({ signupopen, close }) => {
+	
 	return (
 		<div>
 			<Modal open={signupopen} close={close}>
