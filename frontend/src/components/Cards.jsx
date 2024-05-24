@@ -101,6 +101,7 @@ const Cards = () => {
 						key={task.id}
 						task={task}
 						handleCheckboxChange={handleCheckboxChange}
+						// this makes only the done tasks to be hidden when the button is clicked
 						hiddens={hidden}
 					/>
 				))}
