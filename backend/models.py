@@ -32,10 +32,16 @@ class Tasks(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     task = db.Column(db.String(), nullable=False)
     due_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    user_id = db.Column(db.Integer(), db.ForeignKey("user.id"), nullable=False)
+    task_done = db.Column(db.Boolean(), default=False, nullable=False)
+    user_id = db.Column(db.Integer(), db.ForeignKey("user.id"))
+
 
     def __repr__(self):
         return f'<User {self.username}>'
+    
+    @property
+    def format_due_time(self):
+        return self.due_time.strftime("%I:%M %p") if self.due_time else None
     
      # This functions save, update or delete a task's details to/from the db
 
@@ -43,13 +49,15 @@ class Tasks(db.Model):
         db.session.add(self)
         db.session.commit()
     
-    def update(self, task, due_time):
+    def update(self, task, due_time, task_done):
         self.task = task
         self.due_time = due_time
+        self.task_done = task_done
 
         db.session.commit()
 
-    def delete(self):
+    def delete(self, task_done):
+        self.task_done = task_done
         db.session.delete(self)
         db.session.commit()
 

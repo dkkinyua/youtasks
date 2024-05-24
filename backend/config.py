@@ -21,6 +21,8 @@ class DevelopmentConfig(Config):
 class ProductionConfig(Config):
     pass
 
-# This configuration class is for running unit tests only which we will use when we are testing the APIs endpoints, inherits from Config. We will 'pass' this for now till unit testing
+# This configuration class is for running unit tests only which we will use when we are testing the APIs endpoints, inherits from Config.
 class TestConfig(Config):
-    pass
+    SQLALCHEMY_DATABASE_URI = "sqlite:///test.db"
+    SQLALCHEMY_ECHO = False
+    TESTING = True
