@@ -1,5 +1,6 @@
 # This Python file will hold our application's settings.
 from flask import Flask
+from flask_cors import CORS
 from flask_restx import Api
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
@@ -15,6 +16,8 @@ def create_app(config):
     app = Flask(__name__) 
     app.config.from_object(config)
     db.init_app(app)
+
+    CORS(app)
 
     migrate = Migrate(app, db)
     jwt = JWTManager(app)
