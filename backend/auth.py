@@ -105,15 +105,24 @@ class Refresh(Resource):
             }
         ), 200)
 
-@auth_ns.route("/who", methods=["GET"])
+@auth_ns.route("/who/<int:user_id>", methods=["GET"])
 class Who(Resource):
     @jwt_required()
-    def get(self):
+    @auth_ns.marshal_with(user_model)
+    def get(self, user_id):
+        # Checks if the user id entered checks with the current_user's id
+        # If it doesn't match, it raises a 403 Forbidden response, and a msg
+        # If they match, return the user's details 
+        if user_id != current_user.id:
+            return jsonify(
+                {
+                    "msg": "Unauthorized call"
+                }
+            ), 403
         
         user = {
             "id": current_user.id,
             "username": current_user.username,
             "email": current_user.email
         }
-
         return user
