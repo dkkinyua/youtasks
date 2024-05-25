@@ -1,6 +1,6 @@
 from flask import jsonify, make_response, request
 from flask_restx import Namespace, fields, Resource
-from flask_jwt_extended import get_jwt_identity, jwt_required
+from flask_jwt_extended import get_jwt_identity, jwt_required, current_user
 from models import User
 
 
@@ -21,16 +21,19 @@ class Users(Resource):
     @jwt_required()
     @user_ns.marshal_with(user_model)
     def get(self, user_id):
-        current_user = get_jwt_identity()
-
-        details = User.query.filter_by(username=current_user).first()
-
-        if details.id != user_id:
+        if user_id != current_user.id:
             return jsonify({
-                "msg": "Hey, you are not supposed to do that! Check your permissions."
-            }) ,403
+                "msg": "Unauthorized Request"
+            }), 403
         
-        return details, 200
+        user = {
+            "id": current_user.id,
+            "username": current_user.username,
+            "email": current_user.email
+        } # The password will return null, for security
+
+        return user, 200
+
     
     @jwt_required()
     @user_ns.expect(user_model)
