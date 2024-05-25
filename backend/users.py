@@ -34,7 +34,7 @@ class Users(Resource):
 
         return user, 200
 
-    
+    # Updates user. After updating, redirect user to login page to log in again using the updated credentials
     @jwt_required()
     @user_ns.expect(user_model)
     @user_ns.marshal_with(user_model)
@@ -62,13 +62,12 @@ class Users(Resource):
 
         return details, 200
     
-    # Function to delete the user from the db
+    # Function to delete the user from the db, redirect user to signup page after deleting info
     @jwt_required()
     @user_ns.marshal_with(user_model)
     def delete(self, user_id):
-        current_user = get_jwt_identity()
-        
-        details = User.query.filter_by(username=current_user).first()
+
+        details = User.query.filter_by(username=current_user.username).first()
 
         if details.id != user_id:
             return jsonify({
