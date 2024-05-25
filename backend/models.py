@@ -56,8 +56,14 @@ class Tasks(db.Model):
 
         db.session.commit()
 
-    def delete(self, task_done):
+    # For deleting a task after a user checks task_done
+    def delete_task(self, task_done):
         self.task_done = task_done
+        db.session.delete(self)
+        db.session.commit()
+
+    # Deletes a task when a user hasn't checked task_done
+    def delete(self):
         db.session.delete(self)
         db.session.commit()
 
