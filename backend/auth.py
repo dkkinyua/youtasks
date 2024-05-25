@@ -1,8 +1,9 @@
 from flask import jsonify, request, make_response
 from flask_restx import fields, Namespace, Resource
-from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required
+from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required, current_user, JWTManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import User
+
 
 auth_ns = Namespace("auth", description="Authorization and Authentication namespace")
 
@@ -14,7 +15,7 @@ user_model = auth_ns.model(
         "password": fields.String()
     }
 )
- 
+
 # This endpoint enables a user to sign up to the site
 @auth_ns.route("/signup", methods=["POST"])
 class Signup(Resource):
@@ -80,11 +81,7 @@ class Login(Resource):
             access_token = create_access_token(identity=user.username)
             refresh_token = create_refresh_token(identity=user.username)
 
-            return make_response(jsonify(
-                {
-                "access_token": access_token,
-                "refresh_token": refresh_token
-            }), 200)
+            return make_response(jsonify(access_token=access_token, refresh_token=refresh_token), 200)
         
         # Returns the message if the password entered by the user matches the one in the db, if not, return a 'wrong pwd' prompt
 
@@ -107,3 +104,16 @@ class Refresh(Resource):
                 "access_token": access_token
             }
         ), 200)
+
+@auth_ns.route("/who", methods=["GET"])
+class Who(Resource):
+    @jwt_required()
+    def get(self):
+        
+        user = {
+            "id": current_user.id,
+            "username": current_user.username,
+            "email": current_user.email
+        }
+
+        return user
