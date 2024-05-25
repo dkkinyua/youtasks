@@ -39,15 +39,21 @@ class Users(Resource):
     @user_ns.expect(user_model)
     @user_ns.marshal_with(user_model)
     def put(self, user_id):
-        current_user = get_jwt_identity()
         data = request.get_json()
+        username = data.get("username")
 
-        details = User.query.filter_by(username=current_user).first()
+        details = User.query.filter_by(username=current_user.username).first()
 
-        if details.id != user_id:
+        if user_id != current_user.id:
             return jsonify({
                 "msg": "Unauthorized entry."
             }), 403
+        
+        if User.query.filter_by(username=username).first():
+            return jsonify(
+                {"msg": f"{username} has already been taken, choose another username."}
+            )
+        
         
         details.update(
             username = data.get("username"),
