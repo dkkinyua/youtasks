@@ -32,16 +32,7 @@ class GetTasks(Resource):
     @jwt_required()
     @tasks_namespace.marshal_list_with(task_model)
     def get(self):
-        current_user = get_jwt_identity()
-
-        user = User.query.filter_by(username=current_user).first()
-
-        if not user:
-            return jsonify({
-                "msg": "Unauthorized"
-            }), 403
-        
-        get_all_tasks = Tasks.query.filter_by(user_id=user.id).all()
+        get_all_tasks = Tasks.query.all()
 
         return get_all_tasks
     
@@ -53,42 +44,16 @@ class PostTask(Resource):
     @tasks_namespace.marshal_with(task_model)
     def post(self):
         data = request.get_json()
-        
-        task = data.get("task")
-        due_date_str = data.get("due_date")
-        task_done = data.get("task_done", False)
-
-        if task is None or due_date_str is None:
-            return make_response(jsonify({
-                "msg": "Task and due date are required."
-            }), 400)
-
-        try:
-            due_date = datetime.now().date()
-            due_time = datetime.strptime(due_date_str, "%I:%M %p").time()
-            due_datetime = datetime.combine(due_date, due_time)
-
-        except ValueError:
-            return make_response(jsonify({
-                "msg": "Invalid date format. Use '9:00 AM' format."
-            }), 400)
 
         new_task = Tasks(
-            task=task,
-            due_time=due_datetime,
-            task_done=task_done,
+            task = data.get("task"),
+            due_time = data.get("due_time"),
+            task_done = data.get("task_done")
         )
 
         new_task.save()
 
-        tasks = {
-            "id": new_task.id,
-            "task": new_task.task,
-            "due_time": new_task.format_due_time,
-            "task_done": new_task.task_done
-        }
-
-        return tasks, 201
+        return new_task, 201
 
 # This endpoint is for updating or deleting a task.
 @tasks_namespace.route("/<int:id>")
@@ -125,7 +90,7 @@ class TasksResource(Resource):
         update_task.task_done = task_done
 
         if update_task.task_done:
-            update_task.delete(
+            update_task.delete_task(
                 task_done = data.get("task_done")
             )
             return jsonify({
@@ -133,6 +98,17 @@ class TasksResource(Resource):
             }), 200
 
         return update_task, 200
+    
+    # Deleting a task
+    @jwt_required()
+    @tasks_namespace.marshal_with(task_model)
+    def delete(self, id):
+        delete_task = Tasks.query.get_or_404(id)
+        delete_task.delete()
+
+        return jsonify({
+            "msg": "Task deleted"
+        }), 200
 
 
 
