@@ -1,6 +1,6 @@
 from flask import jsonify, request, make_response
 from flask_restx import fields, Namespace, Resource
-from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required, current_user, JWTManager
+from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import User
 
@@ -33,12 +33,12 @@ class Signup(Resource):
             if db_user:
                 return jsonify({
                     "msg": f"A user with the username {username} exists, try another username"
-                })
+                }), 401
             
             if db_email:
                 return jsonify({
                     "msg": f"A user with the email {email} exists, try another email"
-                })
+                }), 401
             
             new_user = User(
                 username = data.get("username"),
@@ -88,7 +88,7 @@ class Login(Resource):
         if not check_password_hash(password, user.password):
             return jsonify({
                 "msg": "Wrong Password, try again."
-            })
+            }), 401
         
 # This endpoint refreshes the tokens everytime a user reloads the page
 @auth_ns.route("/refresh", methods=["POST"])
