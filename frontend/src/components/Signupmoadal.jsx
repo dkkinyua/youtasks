@@ -18,7 +18,13 @@ export const Signupmoadal = ({ signupopen, close }) => {
 		<div>
 			<Modal open={signupopen} close={close}>
 				<h1 className="text-4xl text-white">Sign up</h1>
-				<form onSubmit={()=>onSignup()} className="mt-8 text-white">
+				<form
+					onSubmit={(e) => {
+						e.preventDefault();
+						onSignup();
+					}}
+					className="mt-8 text-white"
+				>
 					<div className=" ">
 						<label htmlFor="email">Email</label>
 						<input
@@ -37,7 +43,7 @@ export const Signupmoadal = ({ signupopen, close }) => {
 							name="username"
 							id="username"
 							required
-							onChange={(e) => setUsername(e.target.value)}
+							onChange={(e) => {setUsername(e.target.value)}}
 							className="border   border-red-700 rounded-md bg-transparent block"
 						/>
 					</div>
