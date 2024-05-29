@@ -33,7 +33,7 @@ class GetTasks(Resource):
     @jwt_required()
     @tasks_namespace.marshal_list_with(task_model)
     def get(self):
-        get_all_tasks = Tasks.query.all()
+        get_all_tasks = Tasks.query.filter_by(user_id=current_user.id).all()
 
         return get_all_tasks, 200
     
