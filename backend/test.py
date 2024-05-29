@@ -84,6 +84,34 @@ class APITestCase(ut.TestCase):
         status_code = refresh_response.status_code
 
         self.assertEqual(status_code, 200)
+
+    # A test to get all tasks
+    def test_get_tasks(self):
+        test = {
+            "username": "test",
+            "email": "test@test.com",
+            "password": "password"
+        }
+
+        signup_response = self.client.post("/auth/signup", json=test)
+
+        login = {
+            "username": "test",
+            "password": "password"
+        }
+
+        login_response = self.client.post("/auth/login", json=login)  
+        access_token = login_response.json["access_token"] # Accessing our access_token from the login response
+
+        header = {
+            "Authorization": f"Bearer {access_token}"
+        }
+
+        test_response = self.client.get("/tasks/get-tasks", headers = header)
+
+        status_code = test_response.status_code
+
+        self.assertEqual(status_code, 200)
         
 
     # This function tears down the test database after running tests
