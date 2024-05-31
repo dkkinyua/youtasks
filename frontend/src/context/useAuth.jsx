@@ -5,4 +5,3 @@ const useAuth = () => useContext(AuthContext);
 
 
 export default useAuth;
-``

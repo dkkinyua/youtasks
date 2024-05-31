@@ -1,10 +1,29 @@
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+// import TaskProvider from "../context/taskContext";
+// import useTask from "../context/usetasks";
+import createApi from "../context/api";
 const Cards = () => {
 	const duedate = new Date();
 	const dueDate = duedate.toDateString();
+	const api = createApi();
 
-	const[hidden, sethidden]= useState(true);
+	
+	const getTasks = async () => {
+		try {
+			const res = await api.get("/tasks/get-tasks");
+			return res.data;
+		} catch (error) {
+			console.error("Error fetching tasks:", error);
+			throw error;
+		}
+	};
+
+	useEffect(() => {
+		getTasks();
+	},[]);
+	console.log(getTasks());
+
+	const [hidden, sethidden] = useState(true);
 
 	const [tasks, setTasks] = useState([
 		{
@@ -36,7 +55,10 @@ const Cards = () => {
 		<div
 			// eslint-disable-next-line
 			key={task.id}
-		className={`text-white border border-red-700 rounded lg:w-2/12 md:w-2/6 w-full m-2 p-4 ` + (hiddens ? "hidden" : "")}
+			className={
+				`text-white border border-red-700 rounded lg:w-2/12 md:w-2/6 w-full m-2 p-4 ` +
+				(hiddens ? "hidden" : "")
+			}
 		>
 			<div className="info flex justify-between">
 				<h2>

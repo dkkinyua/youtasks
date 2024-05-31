@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
            setUser(false)
         }
 	}
-
+	
 	const value = {
 		user,
 		handleCreateUser,
