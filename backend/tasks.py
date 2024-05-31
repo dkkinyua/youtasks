@@ -1,7 +1,7 @@
 from flask import jsonify, make_response, request
 from flask_restx import Namespace, Resource, fields
 from models import Tasks, User
-from flask_jwt_extended import get_jwt_identity, jwt_required
+from flask_jwt_extended import current_user, jwt_required
 from datetime import datetime
 
 tasks_namespace = Namespace("tasks", description='Namespaces for tasks')
@@ -13,6 +13,7 @@ task_model = tasks_namespace.model(
         "task": fields.String(),
         "due_date": fields.DateTime(),
         "task_done": fields.Boolean(),
+        "user_id": fields.Integer()
     }
 )
 
@@ -32,9 +33,9 @@ class GetTasks(Resource):
     @jwt_required()
     @tasks_namespace.marshal_list_with(task_model)
     def get(self):
-        get_all_tasks = Tasks.query.all()
+        get_all_tasks = Tasks.query.filter_by(user_id=current_user.id).all()
 
-        return get_all_tasks
+        return get_all_tasks, 200
     
 # This endpoint posts a new task to the db.
 @tasks_namespace.route("/post")
@@ -48,7 +49,8 @@ class PostTask(Resource):
         new_task = Tasks(
             task = data.get("task"),
             due_time = data.get("due_time"),
-            task_done = data.get("task_done")
+            task_done = data.get("task_done"),
+            user_id = current_user.id
         )
 
         new_task.save()
