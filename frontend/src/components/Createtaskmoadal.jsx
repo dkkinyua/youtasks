@@ -1,6 +1,7 @@
 import Modal from "./Modal";
 import { useState } from "react";
 import api from "../context/api";
+
 // import TaskProvider from "../context/taskContext";
 // eslint-disable-next-line
 export const Createtaskmoadal = ({ createtask, close }) => {
@@ -11,17 +12,23 @@ export const Createtaskmoadal = ({ createtask, close }) => {
 	const [priority, setPriority] = useState("");
 
 	const addTask = async () => {
+		const combinedDateTime = `${dueDate}T${dueTime}`;
+		const date = new Date(combinedDateTime);
+		const utcDateTime = new Date(
+			date.getTime() - date.getTimezoneOffset() * 60000
+		);
+		const isoString = utcDateTime.toISOString();
+
+		const taskData = {
+			task,
+			due_date: isoString,
+			priority,
+		};
+
 		try {
-			const res = await api.post("/tasks", {
-				task,
-				dueDate,
-				dueTime,
-				priority,
-			});
-			console.log(res.data);
-			return res.data;
+			const response = await api.post("/tasks.post", taskData);
+			return response.data;
 		} catch (error) {
-			console.error("Error adding task:", error);
 			throw error;
 		}
 	};
@@ -41,7 +48,7 @@ export const Createtaskmoadal = ({ createtask, close }) => {
 						handlesubmit;
 					}}
 				>
-					<h1 className="">Create Task</h1>
+					<h1 className="text-4xl my-5">Create Task</h1>
 					<div className="">
 						<label htmlFor="task">Task</label>
 						<input
@@ -75,7 +82,7 @@ export const Createtaskmoadal = ({ createtask, close }) => {
 						<label htmlFor="priority">Priority</label>
 						<select
 							id="priority"
-							className="block border   border-red-700 rounded-md text-black"
+							className="block border   border-red-700 rounded-md text-black w-full"
 							onChange={() => setPriority(priority)}
 						>
 							<option value="high">High</option>
@@ -87,10 +94,11 @@ export const Createtaskmoadal = ({ createtask, close }) => {
             <label htmlFor="description">Description</label>
 						<textarea id="description" placeholder="Enter Description" className="block border   border-red-700 rounded-md" />
 					</div> */}
-					<div className="justify-self-center">
+
+					<div className="flex justify-center items-center">
 						<button
 							type="submit"
-							className="bg-red-700 rounded-md p-2 mt-3 justify-self-center"
+							className="bg-red-700 rounded-md p-2 mt-3 self-center relative"
 						>
 							Submit
 						</button>

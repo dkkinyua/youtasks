@@ -46,12 +46,15 @@ const Loginmodal = ({ loginopen, close }) => {
 								className="border  border-red-700 rounded-md bg-transparent block"
 							/>
 						</div>
-						<button
-							type="submit"
-							className="mt-4 justify-self-center bg-white text-black p-2 rounded-md"
-						>
-							Log in
-						</button>
+						
+						<div className="flex justify-center items-center">
+							  <button
+								type="submit"
+								className="bg-red-700 rounded-md p-2 mt-3 self-center relative"
+							  >
+								Submit
+							  </button>
+							  </div>
 					</form>
 				</div>
 			</Modal>

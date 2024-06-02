@@ -31,37 +31,38 @@ const createApi = () => {
       if (error.response && error.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
         const refreshToken = localStorage.getItem('refresh_token');
-        if (refreshToken){
-        // Log the refresh token and request details
-        console.log('Attempting to refresh token with:', refreshToken);
-        
-        try {
-          const response = await api.post('/auth/refresh', {}, {
-            headers: { Authorization: `Bearer ${refreshToken}` }
-          });
+        if (refreshToken) {
+          // Log the refresh token and request details
+          console.log('Attempting to refresh token with:', refreshToken);
           
-          // Log the server response
-          console.log('Refresh token response:', response);
+          try {
+            const response = await api.post('/auth/refresh', {}, {
+              headers: { Authorization: `Bearer ${refreshToken}` }
+            });
+            
+            // Log the server response
+            console.log('Refresh token response:', response);
 
-          if (response.status === 200) {
-            const newAccessToken = response.data.token;
-            localStorage.setItem('access_token', newAccessToken);
-            api.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
-            originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-            return api(originalRequest);
+            if (response.status === 200) {
+              const newAccessToken = response.data.token;
+              localStorage.setItem('access_token', newAccessToken);
+              api.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
+              originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+              return api(originalRequest);
+            }
+          } catch (err) {
+            // Log the error details
+            console.error('Error refreshing token:', err.response || err);
+
+            if (err.response && err.response.status === 401) {
+              localStorage.removeItem('access_token');
+              localStorage.removeItem('refresh_token');
+              window.location.href = '/';
+            }
+            return Promise.reject(err);
           }
-        } catch (err) {
-          // Log the error details
-          console.error('Error refreshing token:', err.response || err);
-
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('refresh_token');
-          window.location.href = '/';
-          return Promise.reject(err);
-        }
-	}
-	else{
-		console.log("no refresh token")
+	} else {
+	  console.log("no refresh token");
 	}
       }
       return Promise.reject(error);
