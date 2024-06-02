@@ -1,16 +1,14 @@
 import Tasks from './components/Tasks'
 import './App.css'
 import Navbar from './components/Navbar'
-function App() {
 
+function App() {
   return (
     <>
-    <div className="main bg-black h-screen">
-      <Navbar/>
-      <Tasks/>
-      
-    </div>
-     
+      <main className="main bg-black bg-auto min-h-screen" >
+        <Navbar />
+        <Tasks />
+      </main>
     </>
   )
 }

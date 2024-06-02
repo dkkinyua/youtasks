@@ -7,13 +7,13 @@ const Modal = ({ open, close, children }) => {
 				onClick={close}
 				className={`
                 fixed inset-0 flex justify-center items-center transition-colors z-20
-                ${open ? "visible bg-black/50" : "invisible"}
+                ${open ? "visible bg-black/80" : "invisible"}
             `}
 			>
 				{/* modal */}
 				<div
 					className={`
-                    bg-white/5 rounded-xl shadow p-6 transition-all
+                    bg-black/80 rounded-xl shadow p-6 transition-all
                     ${open ? "scale-100 opacity-100" : "scale-125 opacity-0"}
                     `}
 					onClick={(e) => {
