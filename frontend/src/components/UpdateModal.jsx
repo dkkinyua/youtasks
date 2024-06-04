@@ -1,12 +1,13 @@
 import Modal from "./Modal";
 import { useState } from "react";
+import createApi from "../context/api";
+// eslint-disable-next-line
 export const UpdateModal = ({ openupdate, close, tasks }) => {
   const [task, setTask] = useState("");
   const [dueDate, setDueDate] = useState("");
-  const [task_done, setTaskDone] = useState(false);
   const [dueTime, setDueTime] = useState("");
   const [priority, setPriority] = useState("");
-  console.log(tasks);
+  const api = createApi();
 
   const updateTask = async () => {
     const combinedDateTime = `${dueDate}T${dueTime}`;
@@ -18,14 +19,18 @@ export const UpdateModal = ({ openupdate, close, tasks }) => {
     const taskData = {
       task,
       due_date: isoString,
-      task_done,
       priority,
     };
+    // eslint-disable-next-line
+    const response = await api.put(`/tasks/${tasks.id}`, taskData);
+    return response.data;
+  };
+  const handleUpdate = async () => {
     try {
-      const response = await api.put(`/tasks/${tasks.id}`, taskData);
-      return response.data;
+      await updateTask();
+      console.log("Task added successfully");
     } catch (error) {
-      throw error;
+      console.error("Error submitting the form:", error);
     }
   };
 
@@ -41,7 +46,7 @@ export const UpdateModal = ({ openupdate, close, tasks }) => {
               className="text-white"
               onSubmit={(e) => {
                 e.preventDefault();
-                updateTask();
+                handleUpdate();
               }}
             >
               <div className="">
@@ -50,6 +55,7 @@ export const UpdateModal = ({ openupdate, close, tasks }) => {
                   type="text"
                   onChange={() => setTask(task)}
                   id="task"
+                  // eslint-disable-next-line
                   placeholder={tasks.task}
                   className="block h-24 w-full rounded-md border border-red-700 text-black"
                 />
@@ -76,6 +82,7 @@ export const UpdateModal = ({ openupdate, close, tasks }) => {
                 <select
                   id="priority"
                   className="block w-full rounded-md border border-red-700 text-black"
+                  // eslint-disable-next-line
                   placeholder={tasks.priority}
                   onChange={() => setPriority(priority)}
                 >

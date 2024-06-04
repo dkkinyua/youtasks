@@ -31,7 +31,7 @@ const Cards = () => {
 
   useEffect(() => {
     getTasks();
-  }, []);
+  });
   console.log(getTasks());
 
   const [hidden, sethidden] = useState(true);
@@ -166,6 +166,7 @@ const Cards = () => {
           viewBox="0 0 512 512"
           className="mr-2 mt-2 h-4 w-4 cursor-pointer fill-red-700"
           onClick={(e) => {
+            // eslint-disable-next-line
             console.log(task.id);
             setOpenupdate(true);
             setOpentask(task);
@@ -180,6 +181,7 @@ const Cards = () => {
           className="mt-2 h-4 w-4 cursor-pointer fill-red-700"
           onClick={(e) => {
             e.preventDefault();
+            // eslint-disable-next-line
             deleteTask(task.id);
           }}
         >

@@ -1,7 +1,6 @@
 import Modal from "./Modal";
 import { useState } from "react";
-import api from "../context/api";
-
+import createApi from "../context/api";
 // import TaskProvider from "../context/taskContext";
 // eslint-disable-next-line
 export const Createtaskmoadal = ({ createtask, close }) => {
@@ -10,6 +9,7 @@ export const Createtaskmoadal = ({ createtask, close }) => {
   const [dueDate, setDueDate] = useState("");
   const [dueTime, setDueTime] = useState("");
   const [priority, setPriority] = useState("");
+  const api = createApi();
 
   const addTask = async () => {
     const combinedDateTime = `${dueDate}T${dueTime}`;
@@ -17,6 +17,7 @@ export const Createtaskmoadal = ({ createtask, close }) => {
     const utcDateTime = new Date(
       date.getTime() - date.getTimezoneOffset() * 60000,
     );
+
     const isoString = utcDateTime.toISOString();
 
     const taskData = {
@@ -26,15 +27,20 @@ export const Createtaskmoadal = ({ createtask, close }) => {
     };
 
     try {
-      const response = await api.post("/tasks.post", taskData);
+      const response = await api.post("/tasks/post", taskData);
       return response.data;
     } catch (error) {
-      throw error;
+      console.log(error,"error");
+      throw new Error("Failed to create task");
     }
   };
-  const handlesubmit = () => {
-    addTask();
-    console.log(task);
+  const handlesubmit = async () => {
+    try {
+      await addTask();
+      console.log("Task added successfully");
+    } catch (error) {
+      console.error("Error submitting the form:", error);
+    }
   };
 
   return (
@@ -45,7 +51,7 @@ export const Createtaskmoadal = ({ createtask, close }) => {
           className="text-white"
           onSubmit={(e) => {
             e.preventDefault();
-            handlesubmit;
+            handlesubmit();
           }}
         >
           <h1 className="my-5 text-4xl">Create Task</h1>
@@ -53,7 +59,7 @@ export const Createtaskmoadal = ({ createtask, close }) => {
             <label htmlFor="task">Task</label>
             <input
               type="text"
-              onChange={() => setTask(task)}
+              onChange={(e) => setTask(e.target.value)}
               id="task"
               placeholder="Enter Task"
               className="block rounded-md border border-red-700 text-black"
@@ -66,14 +72,14 @@ export const Createtaskmoadal = ({ createtask, close }) => {
                 type="date"
                 id="due_date"
                 placeholder="Enter Due date"
-                onChange={() => setDueDate(dueDate)}
+                onChange={(e) => setDueDate(e.target.value)}
                 className="block rounded-md border border-red-700 text-black"
               />
               <input
                 type="time"
                 id="due_time"
                 placeholder="Enter Due time"
-                onChange={() => setDueTime(dueTime)}
+                onChange={(e) => setDueTime(e.target.value)}
                 className="ml-4 block rounded-md border border-red-700 text-black"
               />
             </div>
@@ -83,7 +89,7 @@ export const Createtaskmoadal = ({ createtask, close }) => {
             <select
               id="priority"
               className="block w-full rounded-md border border-red-700 text-black"
-              onChange={() => setPriority(priority)}
+              onChange={(e) => setPriority(e.target.value)}
             >
               <option value="high">High</option>
               <option value="medium">Medium</option>
